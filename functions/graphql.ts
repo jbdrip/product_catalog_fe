@@ -4,9 +4,9 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import logger from "../src/logger";
 
 // Conexión a Supabase
-const supabaseUrl = process.env.SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_KEY!;
-const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey);
+// const supabaseUrl = process.env.SUPABASE_URL!;
+// const supabaseKey = process.env.SUPABASE_KEY!;
+// const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey);
 
 // Array de productos de prueba
 const mockProducts = [
