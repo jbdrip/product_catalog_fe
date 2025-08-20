@@ -3,5 +3,15 @@
   command = "cd frontend && npm install && npm run build"
   publish = "frontend/public"
 
+[functions]
+  node_bundler = "esbuild"
+
 [dev]
   functions = "functions"
+
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Headers = "Content-Type, Authorization"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"

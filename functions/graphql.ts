@@ -1,12 +1,6 @@
 import { Handler } from "@netlify/functions";
-import { ApolloServer, gql } from "apollo-server-lambda";
-//import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { graphql, buildSchema } from 'graphql';
 import logger from "../src/logger";
-
-// Conexión a Supabase
-// const supabaseUrl = process.env.SUPABASE_URL!;
-// const supabaseKey = process.env.SUPABASE_KEY!;
-// const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey);
 
 const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS?.split(",") || ["*"];
 
@@ -17,8 +11,8 @@ const mockProducts = [
   { id: "3", name: "Producto C", price: 7.99, photo: "https://via.placeholder.com/150" },
 ];
 
-// Definición del schema GraphQL
-const typeDefs = gql`
+// Schema GraphQL
+const schema = buildSchema(`
   type Product {
     id: ID!
     name: String!
@@ -34,112 +28,116 @@ const typeDefs = gql`
   type Mutation {
     addProduct(name: String!, price: Float!, photo: String!): Product!
   }
-`;
+`);
 
 // Resolvers
-/*const resolvers = {
-  Query: {
-    products: async () => {
-      const { data, error } = await supabase.from("products").select("*");
-      if (error) {
-        logger.error("Error fetching products:", error);
-        throw new Error("Failed to fetch products");
-      }
-      return data;
-    },
-    product: async (_: any, { id }: { id: string }) => {
-      const { data, error } = await supabase.from("products").select("*").eq("id", id).single();
-      if (error) {
-        logger.error(`Error fetching product id=${id}:`, error);
-        throw new Error("Product not found");
-      }
-      return data;
-    },
+const rootValue = {
+  products: () => {
+    logger.info("Fetching all products (mock)");
+    return mockProducts;
   },
-  Mutation: {
-    addProduct: async (_: any, { name, price, photo }: { name: string; price: number; photo: string }) => {
-      const { data, error } = await supabase
-        .from("products")
-        .insert([{ name, price, photo }])
-        .select()
-        .single();
-      if (error) {
-        logger.error("Error inserting product:", error);
-        throw new Error("Failed to add product");
-      }
-      return data;
-    },
+  product: ({ id }: { id: string }) => {
+    const product = mockProducts.find((p) => p.id === id);
+    if (!product) {
+      logger.error(`Product not found with id=${id}`);
+      throw new Error("Product not found");
+    }
+    return product;
   },
-};*/
-
-// Resolvers usando el array de prueba
-const resolvers = {
-  Query: {
-    products: async () => {
-      logger.info("Fetching all products (mock)");
-      return mockProducts;
-    },
-    product: async (_: any, { id }: { id: string }) => {
-      const product = mockProducts.find((p) => p.id === id);
-      if (!product) {
-        logger.error(`Product not found with id=${id}`);
-        throw new Error("Product not found");
-      }
-      return product;
-    },
-  },
-  Mutation: {
-    addProduct: async (_: any, { name, price, photo }: { name: string; price: number; photo: string }) => {
-      const newProduct = {
-        id: (mockProducts.length + 1).toString(),
-        name,
-        price,
-        photo,
-      };
-      mockProducts.push(newProduct);
-      logger.info(`Added new product: ${name}`);
-      return newProduct;
-    },
+  addProduct: ({ name, price, photo }: { name: string; price: number; photo: string }) => {
+    const newProduct = {
+      id: (mockProducts.length + 1).toString(),
+      name,
+      price,
+      photo,
+    };
+    mockProducts.push(newProduct);
+    logger.info(`Added new product: ${name}`);
+    return newProduct;
   },
 };
 
-// Crear Apollo Server
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  introspection: true,
-  formatError: (err) => {
-    logger.error("GraphQL Error:", err);
-    return err;
-  },
-});
+export const handler: Handler = async (event, context) => {
+  try {
+    const origin = event.headers.origin ?? "";
+    const corsHeaders = {
+      "Access-Control-Allow-Origin": ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0],
+      "Access-Control-Allow-Credentials": "true",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    };
 
-// Handler compatible con TypeScript y Netlify Functions
-export const handler: Handler = (event, context, callback) => {
-  if (!callback) return; // Seguridad para TS
-
-  const origin = event.headers.origin ?? "";
-  const corsHeaders: Record<string, string> = {
-    "Access-Control-Allow-Origin": ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0],
-    "Access-Control-Allow-Credentials": "true",
-  };
-
-  // Responder OPTIONS para preflight CORS
-  if (event.httpMethod === "OPTIONS") {
-    return callback(null, {
-      statusCode: 200,
-      headers: corsHeaders,
-      body: "OK",
-    });
-  }
-
-  // Llamar a Apollo Lambda handler
-  const apolloHandler = server.createHandler();
-
-  apolloHandler(event, context as any, (error, result) => {
-    if (result && result.headers) {
-      result.headers = { ...result.headers, ...corsHeaders };
+    // Manejar preflight OPTIONS
+    if (event.httpMethod === "OPTIONS") {
+      return {
+        statusCode: 200,
+        headers: corsHeaders,
+        body: "",
+      };
     }
-    callback(error, result);
-  });
+
+    // Solo permitir POST para GraphQL
+    if (event.httpMethod !== "POST") {
+      return {
+        statusCode: 405,
+        headers: corsHeaders,
+        body: JSON.stringify({ error: "Method not allowed" }),
+      };
+    }
+
+    // Parse del body
+    let body;
+    try {
+      body = JSON.parse(event.body || "{}");
+    } catch (error) {
+      return {
+        statusCode: 400,
+        headers: corsHeaders,
+        body: JSON.stringify({ error: "Invalid JSON body" }),
+      };
+    }
+
+    const { query, variables = {}, operationName } = body;
+
+    if (!query) {
+      return {
+        statusCode: 400,
+        headers: corsHeaders,
+        body: JSON.stringify({ error: "No query provided" }),
+      };
+    }
+
+    // Ejecutar GraphQL query
+    const result = await graphql({
+      schema,
+      source: query,
+      rootValue,
+      variableValues: variables,
+      operationName,
+    });
+
+    return {
+      statusCode: 200,
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(result),
+    };
+
+  } catch (error) {
+    logger.error("GraphQL Handler Error:", error);
+    
+    return {
+      statusCode: 500,
+      headers: {
+        "Access-Control-Allow-Origin": ALLOWED_ORIGINS[0],
+        "Access-Control-Allow-Credentials": "true",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ 
+        errors: [{ message: "Internal server error" }] 
+      }),
+    };
+  }
 };
