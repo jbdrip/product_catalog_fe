@@ -1,6 +1,7 @@
 [build]
   functions = "functions"
-  command = "npm run build"
+  command = "cd frontend && npm install && npm run build"
+  publish = "frontend/public"
 
 [dev]
   functions = "functions"
