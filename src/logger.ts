@@ -9,9 +9,8 @@ const logger = createLogger({
   ),
   defaultMeta: { service: "netlify-graphql" },
   transports: [
-    new transports.Console({ format: format.simple() }),
-    new transports.File({ filename: "logs/error.log", level: "error" }),
-    new transports.File({ filename: "logs/combined.log" }),
+    // Solo consola para Netlify
+    new transports.Console({ format: format.simple() })
   ],
 });
 

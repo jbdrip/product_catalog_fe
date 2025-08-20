@@ -1,12 +1,14 @@
-import { APIGatewayProxyHandler } from "aws-lambda";
+import { Handler } from "@netlify/functions";
 import { ApolloServer, gql } from "apollo-server-lambda";
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
+//import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import logger from "../src/logger";
 
 // Conexión a Supabase
 // const supabaseUrl = process.env.SUPABASE_URL!;
 // const supabaseKey = process.env.SUPABASE_KEY!;
 // const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey);
+
+const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS?.split(",") || ["*"];
 
 // Array de productos de prueba
 const mockProducts = [
@@ -113,22 +115,31 @@ const server = new ApolloServer({
 });
 
 // Handler compatible con TypeScript y Netlify Functions
-export const handler: APIGatewayProxyHandler = (event, context, callback) => {
-  const lambdaHandler = server.createHandler();
+export const handler: Handler = (event, context, callback) => {
+  if (!callback) return; // Seguridad para TS
 
-  lambdaHandler(event, context, (err: any, result: any) => {
-    if (err) {
-      logger.error("GraphQL Lambda Error:", err);
-      callback(err);
-      return;
+  const origin = event.headers.origin ?? "";
+  const corsHeaders: Record<string, string> = {
+    "Access-Control-Allow-Origin": ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0],
+    "Access-Control-Allow-Credentials": "true",
+  };
+
+  // Responder OPTIONS para preflight CORS
+  if (event.httpMethod === "OPTIONS") {
+    return callback(null, {
+      statusCode: 200,
+      headers: corsHeaders,
+      body: "OK",
+    });
+  }
+
+  // Llamar a Apollo Lambda handler
+  const apolloHandler = server.createHandler();
+
+  apolloHandler(event, context as any, (error, result) => {
+    if (result && result.headers) {
+      result.headers = { ...result.headers, ...corsHeaders };
     }
-
-    // Aplicar CORS manual
-    if (result?.headers) {
-      result.headers["Access-Control-Allow-Origin"] = process.env.ALLOWED_ORIGINS || "*";
-      result.headers["Access-Control-Allow-Credentials"] = "true";
-    }
-
-    callback(null, result);
+    callback(error, result);
   });
 };
