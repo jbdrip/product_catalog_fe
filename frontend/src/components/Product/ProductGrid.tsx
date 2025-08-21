@@ -6,7 +6,7 @@ import "../../styles/ProductGrid.css";
 
 const ProductGrid: React.FC<ProductGridProps> = ({ products, setSelectedCategory, setSearchTerm }) => {
 
-  const [filteredProducts, setFilteredProducts] = useState(products);
+  const [filteredProducts, setFilteredProducts] = useState([...products]);
 
   const showAllProducts = () => {
     setSelectedCategory("Todos");
@@ -18,10 +18,14 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, setSelectedCategory
     // Lógica para manejar el cambio de orden
     if (selectedOption === "relevance") {
       setFilteredProducts([...products]);
+      console.log("Ordenar por relevancia");
+      console.log([...products]);
     } else {
       const sortedProducts = [...products]
       sortedProducts.sort((a, b) => selectedOption === "price-low" ? a.price - b.price : b.price - a.price);
       setFilteredProducts([...sortedProducts]);
+      console.log("Ordenar por precio");
+      console.log([...sortedProducts]);
     }
   };
 
