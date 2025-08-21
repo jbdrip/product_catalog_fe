@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
-import { ProductGridProps } from "../../types";
+import { Product, ProductGridProps } from "../../types";
 import { SearchX, Package } from "lucide-react";
 import "../../styles/ProductGrid.css";
 
 const ProductGrid: React.FC<ProductGridProps> = ({ products, setSelectedCategory, setSearchTerm }) => {
 
-  const [filteredProducts, setFilteredProducts] = useState([...products]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    console.log("Actualizando productos filtrados");
+    console.log(products);
+    setFilteredProducts([...products]);
+  }, [products]);
 
   const showAllProducts = () => {
     setSelectedCategory("Todos");
