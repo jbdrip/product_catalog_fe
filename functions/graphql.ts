@@ -6,9 +6,9 @@ const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS?.split(",") || ["*"];
 
 // Array de productos de prueba
 const mockProducts = [
-  { id: "1", name: "Producto A", price: 10.99, photo: "https://via.placeholder.com/150" },
-  { id: "2", name: "Producto B", price: 15.49, photo: "https://via.placeholder.com/150" },
-  { id: "3", name: "Producto C", price: 7.99, photo: "https://via.placeholder.com/150" },
+  { id: "1", name: "Producto A", price: 10.99, photo: "https://via.placeholder.com/150", category: "Electrónicos", description: "Descripción del Producto A" },
+  { id: "2", name: "Producto B", price: 15.49, photo: "https://via.placeholder.com/150", category: "Smartphones", description: "Descripción del Producto B" },
+  { id: "3", name: "Producto C", price: 7.99, photo: "https://via.placeholder.com/150", category: "Accesorios", description: "Descripción del Producto C" },
 ];
 
 // Schema GraphQL
@@ -18,6 +18,8 @@ const schema = buildSchema(`
     name: String!
     price: Float!
     photo: String!
+    category: String!
+    description: String!
   }
 
   type Query {
@@ -26,7 +28,7 @@ const schema = buildSchema(`
   }
 
   type Mutation {
-    addProduct(name: String!, price: Float!, photo: String!): Product!
+    addProduct(name: String!, price: Float!, photo: String!, category: String!, description: String!): Product!
   }
 `);
 
@@ -44,12 +46,14 @@ const rootValue = {
     }
     return product;
   },
-  addProduct: ({ name, price, photo }: { name: string; price: number; photo: string }) => {
+  addProduct: ({ name, price, photo, category, description }: { name: string; price: number; photo: string; category: string; description: string }) => {
     const newProduct = {
       id: (mockProducts.length + 1).toString(),
       name,
       price,
       photo,
+      category,
+      description
     };
     mockProducts.push(newProduct);
     logger.info(`Added new product: ${name}`);
