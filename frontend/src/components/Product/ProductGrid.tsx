@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import ProductCard from "./ProductCard";
 import { ProductGridProps } from "../../types";
 import { SearchX, Package } from "lucide-react";
 import "../../styles/ProductGrid.css";
 
 const ProductGrid: React.FC<ProductGridProps> = ({ products, setSelectedCategory, setSearchTerm }) => {
+
+  const [filteredProducts, setFilteredProducts] = useState(products);
 
   const showAllProducts = () => {
     setSelectedCategory("Todos");
@@ -13,18 +15,12 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, setSelectedCategory
 
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedOption = event.target.value;
-    console.log(event.target)
-    console.log(selectedOption);
     // Lógica para manejar el cambio de orden
-    switch (selectedOption) {
-      case "price-low":
-        products.sort((a, b) => a.price - b.price);
-        break;
-      case "price-high":
-        products.sort((a, b) => b.price - a.price);
-        break;
-      default:
-        break;
+    if (selectedOption === "relevance") {
+      setFilteredProducts(products);
+    } else {
+      const sortedProducts = [...filteredProducts].sort((a, b) => selectedOption === "price-low" ? a.price - b.price : b.price - a.price);
+      setFilteredProducts(sortedProducts);
     }
   };
 
@@ -70,7 +66,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, setSelectedCategory
       </div>
       
       <div className="product-grid">
-        {products.map((product, index) => (
+        {filteredProducts.map((product, index) => (
           <div 
             key={product.id} 
             className="product-card-wrapper"
