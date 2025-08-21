@@ -1,27 +1,210 @@
+/* Layout moderno con mejores transiciones y efectos */
 .layout {
   display: flex;
   min-height: 100vh;
-  background: #f5f3ff;
+  background: #ffffff;
   flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Patrón de fondo sutil */
+.layout::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(139, 92, 246, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(167, 139, 250, 0.015) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 50;
+  opacity: 0;
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
 }
 
 .layout-content {
   flex: 1;
-  margin-left: 260px;
-  padding: 100px 32px 80px;
+  margin-left: 0;
+  padding: 0;
   font-family: 'Inter', sans-serif;
+  position: relative;
+  z-index: 2;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@media (max-width: 1024px) {
-  .layout-content {
-    margin-left: 0;
-    padding: 100px 16px 80px;
-  }
+/* Cuando el sidebar está abierto en desktop */
+.sidebar-open .layout-content {
+  margin-left: 280px;
+}
+
+.content-wrapper {
+  padding: 120px 32px 40px;
+  min-height: calc(100vh - 80px);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Header del catálogo mejorado */
+.catalog-header {
+  margin-bottom: 40px;
+}
+
+.header-content {
+  text-align: center;
+  margin-bottom: 48px;
+  position: relative;
 }
 
 .catalog-header h2 {
-  font-size: 28px;
-  font-weight: 700;
-  color: #4c1d95;
-  margin-bottom: 14px;
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 800;
+  background: linear-gradient(135deg, #8b5cf6, #a78bfa, #c4b5fd);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 16px;
+  position: relative;
+  display: inline-block;
+}
+
+.catalog-header h2::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+  border-radius: 2px;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+  }
+  to {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.8), 0 0 30px rgba(167, 139, 250, 0.4);
+  }
+}
+
+.header-subtitle {
+  font-size: 18px;
+  color: #64748b;
+  font-weight: 400;
+  margin: 0;
+  animation: slideUp 0.8s ease-out 0.3s both;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estados responsivos */
+@media (min-width: 1025px) {
+  /* En desktop, por defecto el sidebar está abierto */
+  .layout-content {
+    margin-left: 280px;
+  }
+  
+  /* Cuando se cierra manualmente en desktop */
+  .sidebar-closed .layout-content {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 1024px) {
+  /* En mobile/tablet, por defecto está cerrado */
+  .layout-content {
+    margin-left: 0;
+  }
+  
+  .content-wrapper {
+    padding: 120px 20px 40px;
+  }
+  
+  .catalog-header h2 {
+    font-size: clamp(28px, 6vw, 36px);
+  }
+}
+
+@media (max-width: 768px) {
+  .content-wrapper {
+    padding: 100px 16px 40px;
+  }
+  
+  .header-content {
+    margin-bottom: 32px;
+  }
+  
+  .header-subtitle {
+    font-size: 16px;
+  }
+}
+
+/* Efectos de scroll suave */
+.layout-content {
+  scroll-behavior: smooth;
+}
+
+/* Animación de entrada para el contenido */
+.catalog-header {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mejora visual para el scroll */
+.layout-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.layout-content::-webkit-scrollbar-track {
+  background: rgba(15, 15, 35, 0.3);
+}
+
+.layout-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.6), rgba(167, 139, 250, 0.6));
+  border-radius: 4px;
+}
+
+.layout-content::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.8), rgba(167, 139, 250, 0.8));
 }

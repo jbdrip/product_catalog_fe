@@ -1,6 +1,6 @@
 import React from "react";
 import { SidebarProps, SidebarItem } from "../../types";
-import { Filter } from "lucide-react";
+import { Filter, Home, Package, Heart, Settings, TrendingUp, X } from "lucide-react";
 import "../../styles/Sidebar.css";
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -11,34 +11,73 @@ const Sidebar: React.FC<SidebarProps> = ({
   setSelectedCategory,
 }) => {
   const sidebarItems: SidebarItem[] = [
-    { icon: () => <span>🏠</span>, label: "Inicio", active: true },
-    { icon: () => <span>📦</span>, label: "Productos" },
+    { icon: () => <Home size={20} />, label: "Inicio", active: true },
+    { icon: () => <Package size={20} />, label: "Productos" },
+    { icon: () => <TrendingUp size={20} />, label: "Populares" },
+    { icon: () => <Heart size={20} />, label: "Favoritos" },
+    { icon: () => <Settings size={20} />, label: "Configuración" },
   ];
 
   return (
     <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
-      <nav>
+      <div className="sidebar-header">
+        <h3>Navegación</h3>
+        <button 
+          className="close-sidebar" 
+          onClick={() => setSidebarOpen(false)}
+          aria-label="Cerrar sidebar"
+        >
+          <X size={20} />
+        </button>
+      </div>
+      
+      <nav className="sidebar-nav">
         {sidebarItems.map((item, index) => (
           <a
             key={index}
             href="#"
-            className={item.active ? "active" : ""}
+            className={`nav-item ${item.active ? "active" : ""}`}
+            onClick={(e) => e.preventDefault()}
           >
-            <item.icon /> {item.label}
+            <span className="nav-icon">
+              <item.icon />
+            </span>
+            <span className="nav-label">{item.label}</span>
+            {item.active && <span className="active-indicator"></span>}
           </a>
         ))}
       </nav>
-      <div className="categories">
-        <h3><Filter /> Categorías</h3>
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setSelectedCategory(cat)}
-            className={selectedCategory === cat ? "active" : ""}
-          >
-            {cat}
-          </button>
-        ))}
+      
+      <div className="categories-section">
+        <div className="categories-header">
+          <Filter size={18} />
+          <h4>Categorías</h4>
+        </div>
+        
+        <div className="categories-list">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`category-btn ${selectedCategory === cat ? "active" : ""}`}
+            >
+              <span className="category-name">{cat}</span>
+              {selectedCategory === cat && <span className="category-indicator"></span>}
+            </button>
+          ))}
+        </div>
+      </div>
+      
+      <div className="sidebar-footer">
+        <div className="user-section">
+          <div className="user-avatar">
+            <span>U</span>
+          </div>
+          <div className="user-info">
+            <p className="user-name">Usuario</p>
+            <p className="user-status">En línea</p>
+          </div>
+        </div>
       </div>
     </aside>
   );
