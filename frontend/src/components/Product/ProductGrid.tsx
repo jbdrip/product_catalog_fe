@@ -17,17 +17,15 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, setSelectedCategory
     const selectedOption = event.target.value;
     // Lógica para manejar el cambio de orden
     if (selectedOption === "relevance") {
-      console.log("Ordenar por relevancia");
-      setFilteredProducts(products);
+      setFilteredProducts([...products]);
     } else {
-      console.log("Ordenar por precio");
       const sortedProducts = [...products]
       sortedProducts.sort((a, b) => selectedOption === "price-low" ? a.price - b.price : b.price - a.price);
-      setFilteredProducts(sortedProducts);
+      setFilteredProducts([...sortedProducts]);
     }
   };
 
-  if (products.length === 0) {
+  if (filteredProducts.length === 0) {
     return (
       <div className="no-products">
         <div className="no-products-icon">
@@ -47,7 +45,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, setSelectedCategory
     <div className="product-grid-container">
       <div className="grid-header">
         <div className="results-count">
-          <span>{products.length} producto{products.length !== 1 ? 's' : ''} encontrado{products.length !== 1 ? 's' : ''}</span>
+          <span>{filteredProducts.length} producto{filteredProducts.length !== 1 ? 's' : ''} encontrado{filteredProducts.length !== 1 ? 's' : ''}</span>
         </div>
         
         <div className="grid-controls">
