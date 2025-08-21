@@ -1,15 +1,21 @@
 import { Handler } from "@netlify/functions";
 import { graphql, buildSchema } from 'graphql';
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import logger from "../src/logger";
 
 const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS?.split(",") || ["*"];
 
 // Array de productos de prueba
-const mockProducts = [
+/*const mockProducts = [
   { id: "1", name: "Producto A", price: 10.99, photo: "https://via.placeholder.com/150", category: "Electrónicos", description: "Descripción del Producto A" },
   { id: "2", name: "Producto B", price: 15.49, photo: "https://via.placeholder.com/150", category: "Smartphones", description: "Descripción del Producto B" },
   { id: "3", name: "Producto C", price: 7.99, photo: "https://via.placeholder.com/150", category: "Accesorios", description: "Descripción del Producto C" },
-];
+];*/
+
+// Conexión a Supabase
+const supabaseUrl = process.env.SUPABASE_URL!;
+const supabaseKey = process.env.SUPABASE_KEY!;
+const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey);
 
 // Schema GraphQL
 const schema = buildSchema(`
@@ -33,7 +39,7 @@ const schema = buildSchema(`
 `);
 
 // Resolvers
-const rootValue = {
+/*const rootValue = {
   products: () => {
     logger.info("Fetching all products (mock)");
     return mockProducts;
@@ -58,6 +64,76 @@ const rootValue = {
     mockProducts.push(newProduct);
     logger.info(`Added new product: ${name}`);
     return newProduct;
+  },
+};*/
+const rootValue = {
+  products: async () => {
+    logger.info("Fetching all products from Supabase");
+    
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      logger.error("Error fetching products:", error);
+      throw new Error("Failed to fetch products");
+    }
+
+    return data || [];
+  },
+
+  product: async ({ id }: { id: string }) => {
+    logger.info(`Fetching product with id: ${id}`);
+    
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      logger.error(`Error fetching product with id=${id}:`, error);
+      throw new Error("Product not found");
+    }
+
+    return data;
+  },
+
+  addProduct: async ({ 
+    name, 
+    price, 
+    photo, 
+    category, 
+    description 
+  }: { 
+    name: string; 
+    price: number; 
+    photo: string; 
+    category: string; 
+    description: string 
+  }) => {
+    logger.info(`Adding new product: ${name}`);
+    
+    const { data, error } = await supabase
+      .from('products')
+      .insert([{
+        name,
+        price,
+        photo,
+        category,
+        description
+      }])
+      .select()
+      .single();
+
+    if (error) {
+      logger.error("Error adding product:", error);
+      throw new Error("Failed to add product");
+    }
+
+    logger.info(`Successfully added product: ${name}`);
+    return data;
   },
 };
 
