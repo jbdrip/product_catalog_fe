@@ -19,7 +19,8 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, setSelectedCategory
     if (selectedOption === "relevance") {
       setFilteredProducts(products);
     } else {
-      const sortedProducts = [...filteredProducts].sort((a, b) => selectedOption === "price-low" ? a.price - b.price : b.price - a.price);
+      const sortedProducts = [...products]
+      sortedProducts.sort((a, b) => selectedOption === "price-low" ? a.price - b.price : b.price - a.price);
       setFilteredProducts(sortedProducts);
     }
   };
