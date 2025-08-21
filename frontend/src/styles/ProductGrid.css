@@ -1,0 +1,25 @@
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 28px;
+  padding-bottom: 40px;
+}
+
+.no-products {
+  text-align: center;
+  padding: 80px 0;
+  color: #6b7280;
+  font-family: 'Inter', sans-serif;
+}
+
+.no-products h3 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.no-products p {
+  font-size: 14px;
+  color: #6b7280;
+}

@@ -1,0 +1,27 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f3ff;
+  flex-direction: column;
+}
+
+.layout-content {
+  flex: 1;
+  margin-left: 260px;
+  padding: 100px 32px 80px;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 1024px) {
+  .layout-content {
+    margin-left: 0;
+    padding: 100px 16px 80px;
+  }
+}
+
+.catalog-header h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #4c1d95;
+  margin-bottom: 14px;
+}

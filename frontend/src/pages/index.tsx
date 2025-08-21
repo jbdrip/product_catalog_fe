@@ -1,67 +1,34 @@
-import React, { useEffect, useState } from "react";
-import { ApolloProvider, useQuery, gql } from "@apollo/client";
+import React, { useState } from "react";
+import { ApolloProvider } from "@apollo/client";
 import client from "../apolloClient";
+import Layout from "../components/Layout/Layout";
+import ProductsList from "../components/Product/ProductList";
 
-type Product = {
-  id: string;
-  name: string;
-  price: number;
-  photo: string;
-};
+const IndexPage: React.FC = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("Todos");
+  const [searchTerm, setSearchTerm] = useState("");
 
-const GET_PRODUCTS = gql`
-  query GetProducts {
-    products {
-      id
-      name
-      price
-      photo
-    }
-  }
-`;
-
-const ProductsList: React.FC = () => {
-  const { loading, error, data } = useQuery(GET_PRODUCTS);
-  const [products, setProducts] = useState<Product[]>([]);
-
-  useEffect(() => {
-    if (data?.products) {
-      setProducts(data.products);
-    }
-  }, [data]);
-
-  if (loading) return <p>Cargando productos...</p>;
-  if (error) return <p>Error al cargar productos: {error.message}</p>;
+  const categories = ["Todos"]; // O actualizar dinámicamente desde la API
 
   return (
-    <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
-      {products.map((p) => (
-        <div
-          key={p.id}
-          style={{
-            border: "1px solid #ccc",
-            borderRadius: "8px",
-            padding: "10px",
-            width: "150px",
-            textAlign: "center",
-          }}
-        >
-          <img src={p.photo} alt={p.name} style={{ width: "100%", borderRadius: "4px" }} />
-          <h3>{p.name}</h3>
-          <p>${p.price.toFixed(2)}</p>
+    <ApolloProvider client={client}>
+      <Layout
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+        categories={categories}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+      >
+        <div className="catalog-header">
+          <h2>Catálogo de Productos</h2>
+          <ProductsList searchTerm={searchTerm} selectedCategory={selectedCategory} />
         </div>
-      ))}
-    </div>
+      </Layout>
+    </ApolloProvider>
   );
 };
-
-const IndexPage: React.FC = () => (
-  <ApolloProvider client={client}>
-    <div style={{ padding: "20px" }}>
-      <h1>Catálogo de Productos</h1>
-      <ProductsList />
-    </div>
-  </ApolloProvider>
-);
 
 export default IndexPage;
