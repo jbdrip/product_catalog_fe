@@ -1,4 +1,4 @@
-# Product Catalog Web Application
+# OKY Store
 
 Esta es una aplicación web realizada como parte de una prueba técnica. La aplicación muestra un catálogo de productos con sus respectivos, nombres, precios y detalles. El stack utilizado aprovecha **Gatsby** para el frontend o cliente, **Netlify Functions** para funciones serverless backend y logica del negocio, **Supabase** como base de datos y solucion de almacenamiento, y la utilización de **TypeScript** en toda la aplicación para mayor seguridad de tipado y mantenibilidad.
 
