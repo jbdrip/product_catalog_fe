@@ -17,8 +17,10 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, setSelectedCategory
     const selectedOption = event.target.value;
     // Lógica para manejar el cambio de orden
     if (selectedOption === "relevance") {
+      console.log("Ordenar por relevancia");
       setFilteredProducts(products);
     } else {
+      console.log("Ordenar por precio");
       const sortedProducts = [...products]
       sortedProducts.sort((a, b) => selectedOption === "price-low" ? a.price - b.price : b.price - a.price);
       setFilteredProducts(sortedProducts);
