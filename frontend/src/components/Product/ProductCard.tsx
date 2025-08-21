@@ -62,8 +62,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         
         <div className="product-card-footer">
           <div className="price-section">
-            <span className="product-price">${product.price.toFixed(2)}</span>
-            <span className="price-old">${(product.price * 1.2).toFixed(2)}</span>
+            <span className="product-price">Q{product.price.toFixed(2)}</span>
+            <span className="price-old">Q{(product.price * 1.2).toFixed(2)}</span>
           </div>
           
           <button 

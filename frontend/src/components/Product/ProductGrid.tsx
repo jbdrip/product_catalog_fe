@@ -13,6 +13,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, setSelectedCategory
 
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedOption = event.target.value;
+    console.log(event.target)
     // Lógica para manejar el cambio de orden
     switch (selectedOption) {
       case "price-low":
