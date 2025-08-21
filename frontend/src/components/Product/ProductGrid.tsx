@@ -29,7 +29,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, setSelectedCategory
     }
   };
 
-  if (filteredProducts.length === 0) {
+  if (products.length === 0) {
     return (
       <div className="no-products">
         <div className="no-products-icon">
@@ -49,7 +49,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, setSelectedCategory
     <div className="product-grid-container">
       <div className="grid-header">
         <div className="results-count">
-          <span>{filteredProducts.length} producto{filteredProducts.length !== 1 ? 's' : ''} encontrado{filteredProducts.length !== 1 ? 's' : ''}</span>
+          <span>{products.length} producto{products.length !== 1 ? 's' : ''} encontrado{products.length !== 1 ? 's' : ''}</span>
         </div>
         
         <div className="grid-controls">
