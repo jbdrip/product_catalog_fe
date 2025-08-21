@@ -9,8 +9,6 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, setSelectedCategory
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    console.log("Actualizando productos filtrados");
-    console.log(products);
     setFilteredProducts([...products]);
   }, [products]);
 
@@ -20,19 +18,14 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, setSelectedCategory
   };
 
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log("entro")
     const selectedOption = event.target.value;
     // Lógica para manejar el cambio de orden
     if (selectedOption === "relevance") {
       setFilteredProducts([...products]);
-      console.log("Ordenar por relevancia");
-      console.log([...products]);
     } else {
       const sortedProducts = [...products]
       sortedProducts.sort((a, b) => selectedOption === "price-low" ? a.price - b.price : b.price - a.price);
       setFilteredProducts([...sortedProducts]);
-      console.log("Ordenar por precio");
-      console.log([...sortedProducts]);
     }
   };
 
