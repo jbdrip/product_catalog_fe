@@ -52,7 +52,7 @@ Esta es una aplicación web realizada como parte de una prueba técnica. La apli
 
 ---
 
-## 🔧 Instrucciones de Configuration
+## 🔧 Instrucciones de Configuración
 
 ### Pre-requisitos
 - Node.js (>= 18.x)
