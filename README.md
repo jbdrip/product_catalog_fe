@@ -1,89 +1,89 @@
 # Product Catalog Web Application
 
-This is a full-stack web application built as part of a technical assessment. The application displays a catalog of products with images, prices, and details. The stack leverages **Gatsby** for the frontend, **Netlify Functions** for serverless backend logic, **Supabase** as the database and storage solution, and **TypeScript** across the entire project for type safety and maintainability.
+Esta es una aplicación web realizada como parte de una prueba técnica. La aplicación muestra un catálogo de productos con sus respectivos, nombres, precios y detalles. El stack utilizado aprovecha **Gatsby** para el frontend o cliente, **Netlify Functions** para funciones serverless backend y logica del negocio, **Supabase** como base de datos y solucion de almacenamiento, y la utilización de **TypeScript** en toda la aplicación para mayor seguridad de tipado y mantenibilidad.
 
 ---
 
-## 🚀 Tech Stack
+## 🚀 Stack Tecnológico
 
-- **Frontend**: [Gatsby](https://www.gatsbyjs.com/) (React-based static site generator)
-- **Backend**: [Netlify Functions](https://docs.netlify.com/functions/overview/) with [Node.js](https://nodejs.org/)
-- **Database**: [Supabase](https://supabase.com/) (Postgres-based)
-- **Storage**: Supabase Buckets (for product images)
+- **Frontend**: [Gatsby](https://www.gatsbyjs.com/) (Generador de sitios web estáticos basado en React)
+- **Backend**: [Netlify Functions](https://docs.netlify.com/functions/overview/) con [Node.js](https://nodejs.org/)
+- **Database**: [Supabase](https://supabase.com/) (Postgres)
+- **Storage**: Supabase Buckets (para almacenamiento de imagenes)
 - **API**: [GraphQL](https://graphql.org/)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 
 ---
 
-## 📂 Project Structure
+## 📂 Estructura del Proyecto
 
 ```plaintext
 .
-├── functions/                  # Netlify functions (serverless backend)
-│   └── graphql.ts              # GraphQL function to fetch products from Supabase
+├── functions/                  # Funciones Netlify (serverless backend)
+│   └── graphql.ts              # Funcion GraphQL para consultar los productos de Supabase
 ├── src/
-│   └── logger.ts               # Logger configuration with winston
+│   └── logger.ts               # Configuración de Logger con winston
 ├── frontend/
 │   ├── src/
-│   │   ├── components/         # Reusable React components
-│   │   ├── pages/              # Gatsby pages
-│   │   ├── styles/             # Global and component styles
-│   │   ├── apolloClient.ts     # Apollo Client setup for GraphQL
-│   │   └── types.ts            # Type definitions
-│   ├── gatsby-config.js        # Gatsby configuration
-│   ├── package.json             # Dependencies and scripts for frontend
-│   └── tsconfig.json            # TypeScript configuration
-├── netlify.toml                # Netlify configuration
-├── README.md                   # Documentation
-├── package.json                # Dependencies and scripts for backend
-└── tsconfig.json               # TypeScript configuration
+│   │   ├── components/         # Componentes Reutilizables React
+│   │   ├── pages/              # Páginas Gatsby
+│   │   ├── styles/             # Estilos globales y de componentes
+│   │   ├── apolloClient.ts     # Configuración de Apollo Client para GraphQL
+│   │   └── types.ts            # Definiciones de tipado
+│   ├── gatsby-config.js        # Configuración de Gatsby
+│   ├── package.json             # Dependencias y scripts para el frontend
+│   └── tsconfig.json            # Configuración de TypeScript
+├── netlify.toml                # Configuración de Netlify
+├── README.md                   # Documentación
+├── package.json                # Dependencias y scripts para el backend
+└── tsconfig.json               # Configuración de TypeScript
 ```
 
 ---
 
-## ⚙️ Features
+## ⚙️ Características y Funcionalidades
 
-- 📦 **Product Catalog** – Displays products with their name, price, and image.
-- 🗄️ **Database Integration** – Data retrieved from **Supabase**.
-- 🖼️ **Image Storage** – Product images stored in **Supabase Buckets**.
-- ⚡ **Serverless Functions** – GraphQL API built with Netlify Functions.
-- 🎨 **Responsive UI** – Gatsby-based frontend styled with modern CSS.
-- 🔒 **Type Safety** – Full TypeScript implementation (frontend & backend).
+- 📦 **Catálogo de Productos** – Muestra los productos con sus detalles, con opcion para filtrar por categoria y ordenar por precio.
+- 🗄️ **Integración con Base de Datos** – Data almacenada y consultada en base de datos **Supabase**.
+- 🖼️ **Almacenamiento de Imágenes** – Almacenamiento de imagenes utilizando **Supabase Buckets**.
+- ⚡ **Funciones Serverless** – Iplementación de GraphQL API con Netlify Functions.
+- 🎨 **UI Responsiva** – Frontend basado en Gatsby y estilado con CSS.
+- 🔒 **Seguridad en Tipado** – Implementación completa de TypeScript (frontend y backend).
 
 ---
 
-## 🔧 Setup Instructions
+## 🔧 Instrucciones de Configuration
 
-### Prerequisites
+### Pre-requisitos
 - Node.js (>= 18.x)
-- Yarn or npm
-- Supabase account & project
-- Netlify account
+- Yarn o npm
+- Cuenta Supabase y proyecto
+- Cuenta Netlify
 
-### Installation
+### Instalación
 
-1. Clone the repository:
+1. Clona el repositorio:
    ```bash
    git clone https://github.com/jbdrip/product_catalog_fe.git
    cd product_catalog_fe
    ```
 
-2. Configure Netlify:
-   You can connect your GitHub repository and set up automatic deployments. Follow the instructions in the Netlify documentation to deploy your site.
+2. Configura Netlify:
+   Puedes conectar un repositorio de GitHub y configurar los despliegues automáticos. Sigue las instrucciones en la documentación de Netlify para desplegar el sitio.
 
-3. Deploy:
+3. Desplegar:
    ```bash
    git push origin main
-   # Netlify will handle build and deployment automatically
+   # Netlify se encargará de construir y realizar el despliegue automáticamente.
    ```
 
 ---
 
-## 🌐 Deployment
+## 🌐 Despliegue
 
-This project is deployed on **Netlify**:
-- Frontend: Gatsby static site hosted on Netlify
-- Backend: Netlify Functions handling GraphQL requests
-- Database & Storage: Supabase
+Este proyecto está desplegado en **Netlify**:
+- Frontend: Sitio estático Gatsby alojado en Netlify
+- Backend: Netlify Functions que manejan solicitudes GraphQL
+- Base de Datos y Almacenamiento: Supabase
 
 ---
