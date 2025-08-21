@@ -14,6 +14,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, setSelectedCategory
   };
 
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log("entro")
     const selectedOption = event.target.value;
     // Lógica para manejar el cambio de orden
     if (selectedOption === "relevance") {
@@ -71,7 +72,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, setSelectedCategory
       </div>
       
       <div className="product-grid">
-        {filteredProducts.map((product, index) => (
+        {filteredProducts && filteredProducts.map((product, index) => (
           <div 
             key={product.id} 
             className="product-card-wrapper"
