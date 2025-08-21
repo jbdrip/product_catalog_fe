@@ -54,7 +54,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, setSelectedCategory
         
         <div className="grid-controls">
           <select className="sort-select" onChange={handleSortChange} defaultValue="relevance" aria-label="Ordenar productos">
-            <option value="relevance">Más relevantes</option>
+            <option value="relevance" selected>Más relevantes</option>
             <option value="price-low">Precio: menor a mayor</option>
             <option value="price-high">Precio: mayor a menor</option>
           </select>
