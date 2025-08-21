@@ -24,6 +24,8 @@ export type ProductCardProps = {
 // -----------------------------
 export type ProductGridProps = {
   products: Product[];
+  setSelectedCategory: (category: string) => void;
+  setSearchTerm: (term: string) => void;
 };
 
 // -----------------------------
@@ -32,6 +34,9 @@ export type ProductGridProps = {
 export type ProductsListProps = {
   searchTerm: string;
   selectedCategory: string;
+  setCategories: (categories: string[]) => void;
+  setSelectedCategory: (category: string) => void;
+  setSearchTerm: (term: string) => void;
 };
 
 // -----------------------------

@@ -7,6 +7,7 @@ import ProductsList from "../components/Product/ProductList";
 const IndexPage: React.FC = () => {
   // Estado inicial del sidebar basado en el tamaño de pantalla
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [categories, setCategories] = useState<string[]>(["Todos"]); // Más categorías dinámicas
   const [selectedCategory, setSelectedCategory] = useState("Todos");
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -27,8 +28,6 @@ const IndexPage: React.FC = () => {
     return () => window.removeEventListener('resize', checkInitialSidebarState);
   }, []);
 
-  const categories = ["Todos", "Electrónicos", "Smartphones", "Laptops", "Accesorios"]; // Más categorías dinámicas
-
   return (
     <ApolloProvider client={client}>
       <Layout
@@ -45,7 +44,7 @@ const IndexPage: React.FC = () => {
             <h2>Catálogo de Productos</h2>
             <p className="header-subtitle">Descubre los mejores productos que tenemos para ti.</p>
           </div>
-          <ProductsList searchTerm={searchTerm} selectedCategory={selectedCategory} />
+          <ProductsList searchTerm={searchTerm} selectedCategory={selectedCategory} setCategories={setCategories} setSelectedCategory={setSelectedCategory} setSearchTerm={setSearchTerm} />
         </div>
       </Layout>
     </ApolloProvider>

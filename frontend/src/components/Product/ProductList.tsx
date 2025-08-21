@@ -17,7 +17,7 @@ const GET_PRODUCTS = gql`
   }
 `;
 
-const ProductsList: React.FC<ProductsListProps> = ({ searchTerm, selectedCategory }) => {
+const ProductsList: React.FC<ProductsListProps> = ({ searchTerm, selectedCategory, setCategories, setSelectedCategory, setSearchTerm }) => {
   const { loading, error, data, refetch } = useQuery(GET_PRODUCTS);
   const [products, setProducts] = useState<Product[]>([]);
 
@@ -32,6 +32,8 @@ const ProductsList: React.FC<ProductsListProps> = ({ searchTerm, selectedCategor
         description: p.description ?? "Descripción no disponible",
       }));
       setProducts(mapped);
+      const uniqueCategories = Array.from(new Set(mapped.map((p) => p.category))).filter((c): c is string => typeof c === "string").sort();
+      setCategories(["Todos", ...uniqueCategories]);
     }
   }, [data]);
 
@@ -79,7 +81,7 @@ const ProductsList: React.FC<ProductsListProps> = ({ searchTerm, selectedCategor
     return matchesCategory && matchesSearch;
   });
 
-  return <ProductGrid products={filteredProducts} />;
+  return <ProductGrid products={filteredProducts} setSelectedCategory={setSelectedCategory} setSearchTerm={setSearchTerm} />;
 };
 
 export default ProductsList;

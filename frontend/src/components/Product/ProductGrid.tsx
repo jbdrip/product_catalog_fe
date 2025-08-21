@@ -4,7 +4,28 @@ import { ProductGridProps } from "../../types";
 import { SearchX, Package } from "lucide-react";
 import "../../styles/ProductGrid.css";
 
-const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
+const ProductGrid: React.FC<ProductGridProps> = ({ products, setSelectedCategory, setSearchTerm }) => {
+
+  const showAllProducts = () => {
+    setSelectedCategory("Todos");
+    setSearchTerm("");
+  };
+
+  const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedOption = event.target.value;
+    // Lógica para manejar el cambio de orden
+    switch (selectedOption) {
+      case "price-low":
+        products.sort((a, b) => a.price - b.price);
+        break;
+      case "price-high":
+        products.sort((a, b) => b.price - a.price);
+        break;
+      default:
+        break;
+    }
+  };
+
   if (products.length === 0) {
     return (
       <div className="no-products">
@@ -13,7 +34,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
         </div>
         <h3>No se encontraron productos</h3>
         <p>Intenta ajustar los filtros o el término de búsqueda para encontrar lo que buscas</p>
-        <button className="reset-filters-btn">
+        <button className="reset-filters-btn" onClick={showAllProducts}>
           <Package size={16} />
           Ver todos los productos
         </button>
@@ -29,12 +50,10 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
         </div>
         
         <div className="grid-controls">
-          <select className="sort-select">
+          <select className="sort-select" onChange={handleSortChange} defaultValue="relevance" aria-label="Ordenar productos">
             <option value="relevance">Más relevantes</option>
             <option value="price-low">Precio: menor a mayor</option>
             <option value="price-high">Precio: mayor a menor</option>
-            <option value="newest">Más nuevos</option>
-            <option value="rating">Mejor calificados</option>
           </select>
           
           <div className="view-toggle">

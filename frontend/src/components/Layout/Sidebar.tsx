@@ -1,6 +1,6 @@
 import React from "react";
 import { SidebarProps, SidebarItem } from "../../types";
-import { Filter, Home, Package, Heart, Settings, TrendingUp, X } from "lucide-react";
+import { Filter, Home, Package, Heart, Settings, TrendingUp, X, ShoppingCart } from "lucide-react";
 import "../../styles/Sidebar.css";
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -12,8 +12,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const sidebarItems: SidebarItem[] = [
     { icon: () => <Home size={20} />, label: "Inicio", active: true },
-    { icon: () => <Package size={20} />, label: "Productos" },
-    { icon: () => <TrendingUp size={20} />, label: "Categorías" },
+    { icon: () => <ShoppingCart size={20} />, label: "Carrito" },
   ];
 
   return (
