@@ -114,6 +114,7 @@
   color: #64748b;
   font-weight: 400;
   margin: 0;
+  margin-top: 12px;
   animation: slideUp 0.8s ease-out 0.3s both;
 }
 

@@ -30,10 +30,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           >
             <Heart size={18} fill={isLiked ? 'currentColor' : 'none'} />
           </button>
-          
-          <button className="quick-view-btn" aria-label="Vista rápida">
-            <Eye size={18} />
-          </button>
         </div>
         
         <div className="product-badge">

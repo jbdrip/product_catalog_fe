@@ -43,7 +43,7 @@ const IndexPage: React.FC = () => {
         <div className="catalog-header">
           <div className="header-content">
             <h2>Catálogo de Productos</h2>
-            <p className="header-subtitle">Descubre los mejores productos tecnológicos</p>
+            <p className="header-subtitle">Descubre los mejores productos que tenemos para ti.</p>
           </div>
           <ProductsList searchTerm={searchTerm} selectedCategory={selectedCategory} />
         </div>

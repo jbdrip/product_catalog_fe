@@ -13,15 +13,13 @@ const Sidebar: React.FC<SidebarProps> = ({
   const sidebarItems: SidebarItem[] = [
     { icon: () => <Home size={20} />, label: "Inicio", active: true },
     { icon: () => <Package size={20} />, label: "Productos" },
-    { icon: () => <TrendingUp size={20} />, label: "Populares" },
-    { icon: () => <Heart size={20} />, label: "Favoritos" },
-    { icon: () => <Settings size={20} />, label: "Configuración" },
+    { icon: () => <TrendingUp size={20} />, label: "Categorías" },
   ];
 
   return (
     <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
       <div className="sidebar-header">
-        <h3>Navegación</h3>
+        <h3>Menú</h3>
         <button 
           className="close-sidebar" 
           onClick={() => setSidebarOpen(false)}
@@ -65,18 +63,6 @@ const Sidebar: React.FC<SidebarProps> = ({
               {selectedCategory === cat && <span className="category-indicator"></span>}
             </button>
           ))}
-        </div>
-      </div>
-      
-      <div className="sidebar-footer">
-        <div className="user-section">
-          <div className="user-avatar">
-            <span>U</span>
-          </div>
-          <div className="user-info">
-            <p className="user-name">Usuario</p>
-            <p className="user-status">En línea</p>
-          </div>
         </div>
       </div>
     </aside>

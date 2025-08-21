@@ -22,7 +22,7 @@ const Header: React.FC<HeaderProps> = ({
             <Menu />
           </button>
           <h1 className="logo">
-            <span className="logo-tech">Tech</span>
+            <span className="logo-oky">OKY</span>
             <span className="logo-store">Store</span>
           </h1>
         </div>
