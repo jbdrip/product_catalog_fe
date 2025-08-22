@@ -4,13 +4,7 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import logger from "../src/logger";
 
 const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS?.split(",") || ["*"];
-
-// Array de productos de prueba
-/*const mockProducts = [
-  { id: "1", name: "Producto A", price: 10.99, photo: "https://via.placeholder.com/150", category: "Electrónicos", description: "Descripción del Producto A" },
-  { id: "2", name: "Producto B", price: 15.49, photo: "https://via.placeholder.com/150", category: "Smartphones", description: "Descripción del Producto B" },
-  { id: "3", name: "Producto C", price: 7.99, photo: "https://via.placeholder.com/150", category: "Accesorios", description: "Descripción del Producto C" },
-];*/
+const API_SECRET_KEY = process.env.API_SECRET_KEY || "";
 
 // Conexión a Supabase
 const supabaseUrl = process.env.SUPABASE_URL!;
@@ -39,33 +33,6 @@ const schema = buildSchema(`
 `);
 
 // Resolvers
-/*const rootValue = {
-  products: () => {
-    logger.info("Fetching all products (mock)");
-    return mockProducts;
-  },
-  product: ({ id }: { id: string }) => {
-    const product = mockProducts.find((p) => p.id === id);
-    if (!product) {
-      logger.error(`Product not found with id=${id}`);
-      throw new Error("Product not found");
-    }
-    return product;
-  },
-  addProduct: ({ name, price, photo, category, description }: { name: string; price: number; photo: string; category: string; description: string }) => {
-    const newProduct = {
-      id: (mockProducts.length + 1).toString(),
-      name,
-      price,
-      photo,
-      category,
-      description
-    };
-    mockProducts.push(newProduct);
-    logger.info(`Added new product: ${name}`);
-    return newProduct;
-  },
-};*/
 const rootValue = {
   products: async () => {
     logger.info("Fetching all products from Supabase");
@@ -146,6 +113,18 @@ export const handler: Handler = async (event, context) => {
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     };
+
+    // Validación API Key (excepto preflight)
+    if (event.httpMethod !== "OPTIONS") {
+      const clientKey = event.headers["x-api-key"];
+      if (!clientKey || clientKey !== API_SECRET_KEY) {
+        return {
+          statusCode: 401,
+          headers: corsHeaders,
+          body: JSON.stringify({ error: "Unauthorized" }),
+        };
+      }
+    }
 
     // Manejar preflight OPTIONS
     if (event.httpMethod === "OPTIONS") {
